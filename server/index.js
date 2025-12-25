@@ -1,17 +1,23 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Enable CORS for React app
+// Enable CORS for all origins in production
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://127.0.0.1:3000'],
+  origin: true,
   methods: ['GET', 'POST'],
   credentials: true
 }));
 
 app.use(express.json());
+
+// Serve static files from React build in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../build')));
+}
 
 // Health check
 app.get('/api/health', (req, res) => {
@@ -134,6 +140,13 @@ app.get('/api/badges/:username', async (req, res) => {
     });
   }
 });
+
+// Serve React app for all other routes in production
+if (process.env.NODE_ENV === 'production') {
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../build', 'index.html'));
+  });
+}
 
 app.listen(PORT, () => {
   console.log(`

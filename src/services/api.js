@@ -1,7 +1,10 @@
 // API service for LeetCode Badge Generator
 // Uses backend server to proxy LeetCode API calls (avoids CORS issues)
 
-const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+// In production, use relative URLs (same origin). In dev, use localhost:3001
+const API_BASE = process.env.NODE_ENV === 'production' 
+  ? '' 
+  : (process.env.REACT_APP_API_URL || 'http://localhost:3001');
 
 /**
  * Fetch user's ACTUAL badges from LeetCode via our backend proxy
