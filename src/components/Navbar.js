@@ -22,13 +22,9 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-14 sm:h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group" onClick={closeMobileMenu}>
-            <motion.div
-              whileHover={{ rotate: 360 }}
-              transition={{ duration: 0.5 }}
-              className="p-1.5 sm:p-2 rounded-lg bg-gradient-to-br from-lc-orange to-yellow-500"
-            >
+            <div className="p-1.5 sm:p-2 rounded-lg bg-gradient-to-br from-lc-orange to-yellow-500">
               <Award className="w-5 h-5 sm:w-6 sm:h-6 text-black" />
-            </motion.div>
+            </div>
             <span className="font-bold text-lg sm:text-xl">
               <span className="text-white">LC</span>
               <span className="gradient-text">Badge</span>
