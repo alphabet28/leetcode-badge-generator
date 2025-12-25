@@ -44,7 +44,7 @@ All badge designs are original creations. We do not use official LeetCode logos 
 - And many more...
 
 ### Submission Days
-- 365, 500, 1000, 2000 Days Badges
+- 100, 200, 365, 500, 1000, 2000 Days Badges
 
 ---
 
@@ -95,7 +95,7 @@ src/
 1. **Enter Username** - Provide your LeetCode username
 2. **Get Token** - System generates unique token (e.g., `LCBADGE-A1B2C3D4`)
 3. **Add to Bio** - Temporarily add token to your LeetCode profile bio
-4. **Click Verify** - System checks your profile for the token
+4. **Click Verify** - Click verify on our website & the system checks your profile for the token
 5. **Get Verified!** - Remove token and enjoy verified badges
 
 ## 🔌 API Endpoints (Backend Required)
