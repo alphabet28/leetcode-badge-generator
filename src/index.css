@@ -1,0 +1,149 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+  min-height: 100vh;
+  color: #ffffff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Prevent horizontal scroll on mobile */
+html, body {
+  overflow-x: hidden;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+@media (min-width: 640px) {
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a2e;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ffa116;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ffb84d;
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(90deg, #ffa116, #ffd700, #ffa116);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* Badge glow effect */
+.badge-glow {
+  box-shadow: 0 0 20px rgba(255, 161, 22, 0.3),
+              0 0 40px rgba(255, 161, 22, 0.2),
+              0 0 60px rgba(255, 161, 22, 0.1);
+}
+
+.badge-glow-verified {
+  box-shadow: 0 0 20px rgba(44, 187, 93, 0.4),
+              0 0 40px rgba(44, 187, 93, 0.3),
+              0 0 60px rgba(44, 187, 93, 0.2);
+}
+
+/* Glass effect */
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Button hover effects - Mobile-first */
+.btn-primary {
+  @apply bg-gradient-to-r from-lc-orange to-yellow-500 text-black font-semibold py-2.5 px-4 sm:py-3 sm:px-6 rounded-lg
+         transform transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-lc-orange/30
+         active:scale-95 text-sm sm:text-base;
+}
+
+.btn-secondary {
+  @apply bg-transparent border-2 border-lc-orange text-lc-orange font-semibold py-2.5 px-4 sm:py-3 sm:px-6 rounded-lg
+         transform transition-all duration-300 hover:bg-lc-orange hover:text-black
+         active:scale-95 text-sm sm:text-base;
+}
+
+/* Card styles - Mobile-first */
+.card {
+  @apply bg-lc-dark/80 backdrop-blur-lg rounded-xl sm:rounded-2xl border border-white/10 p-4 sm:p-6
+         transform transition-all duration-300 hover:border-lc-orange/30;
+}
+
+/* Input styles - Mobile-first */
+.input-field {
+  @apply w-full bg-lc-darker/50 border border-white/20 rounded-lg px-3 sm:px-4 py-2.5 sm:py-3 text-white text-sm sm:text-base
+         placeholder-gray-500 focus:outline-none focus:border-lc-orange focus:ring-2 
+         focus:ring-lc-orange/30 transition-all duration-300;
+}
+
+/* Status badges - Mobile-first */
+.status-verified {
+  @apply inline-flex items-center gap-1 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-xs sm:text-sm font-medium
+         bg-lc-green/20 text-lc-green border border-lc-green/30;
+}
+
+.status-unverified {
+  @apply inline-flex items-center gap-1 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-xs sm:text-sm font-medium
+         bg-gray-500/20 text-gray-400 border border-gray-500/30;
+}
+
+.status-pending {
+  @apply inline-flex items-center gap-1 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-xs sm:text-sm font-medium
+         bg-lc-orange/20 text-lc-orange border border-lc-orange/30;
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+  .btn-primary:active,
+  .btn-secondary:active,
+  .card:active {
+    transform: scale(0.98);
+  }
+  
+  /* Disable hover effects on touch devices */
+  .btn-primary:hover,
+  .btn-secondary:hover {
+    transform: none;
+  }
+}
+
+/* Safe area insets for notched devices */
+@supports (padding-top: env(safe-area-inset-top)) {
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
