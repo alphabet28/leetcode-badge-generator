@@ -35,16 +35,6 @@ const HomePage = () => {
                   <ArrowRight className="w-5 h-5" />
                 </motion.button>
               </Link>
-              <Link to="/badges" className="w-full sm:w-auto">
-                <motion.button
-                  className="btn-secondary text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 flex items-center justify-center gap-2 w-full"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Award className="w-5 h-5" />
-                  View All Badges
-                </motion.button>
-              </Link>
             </div>
           </motion.div>
         </div>

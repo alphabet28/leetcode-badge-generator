@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Award, Home, CheckCircle, Grid, Menu, X } from 'lucide-react';
+import { Award, Home, CheckCircle, Menu, X } from 'lucide-react';
 
 const Navbar = () => {
   const location = useLocation();
@@ -10,7 +10,6 @@ const Navbar = () => {
   const navItems = [
     { path: '/', label: 'Home', icon: Home },
     { path: '/verify', label: 'Verify', icon: CheckCircle },
-    { path: '/badges', label: 'All Badges', icon: Grid },
   ];
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);

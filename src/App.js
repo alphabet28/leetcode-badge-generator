@@ -6,7 +6,6 @@ import HomePage from './pages/HomePage';
 import VerifyPage from './pages/VerifyPage';
 import BadgePage from './pages/BadgePage';
 import ProfilePage from './pages/ProfilePage';
-import AllBadgesPage from './pages/AllBadgesPage';
 
 function App() {
   return (
@@ -18,7 +17,6 @@ function App() {
           <Route path="/verify" element={<VerifyPage />} />
           <Route path="/badge/:username/:badgeId" element={<BadgePage />} />
           <Route path="/profile/:username" element={<ProfilePage />} />
-          <Route path="/badges" element={<AllBadgesPage />} />
         </Routes>
       </main>
       <Footer />
