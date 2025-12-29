@@ -106,7 +106,6 @@ export const VerificationProvider = ({ children }) => {
       // Step 2: Fetch their ACTUAL badges from LeetCode
       console.log('[Context] Step 2: Fetching badges...');
       setVerificationState(prev => ({ ...prev, isFetchingBadges: true }));
-      
       let badgesResult;
       try {
         badgesResult = await fetchLeetCodeBadges(username);
@@ -115,12 +114,22 @@ export const VerificationProvider = ({ children }) => {
         console.error('[Context] Badge fetch error:', fetchError);
         badgesResult = { success: true, badges: [], source: 'error' };
       }
-      
       const badges = badgesResult?.badges || [];
       const source = badgesResult?.source || 'unknown';
-      
       console.log('[Context] Updating state with badges:', badges.length);
-      
+      // Store encrypted badge data in DB
+      try {
+        const { storeBadges } = await import('../services/badgeStore');
+        await storeBadges(username, badges);
+        console.log('[Context] Badges stored in DB');
+      } catch (err) {
+        console.error('[Context] Failed to store badges in DB:', err);
+        // Surface DB error to user if badge storage fails
+        return {
+          success: false,
+          message: err?.message || 'Failed to store badges in database. Please try again.'
+        };
+      }
       setVerificationState(prev => ({
         ...prev,
         status: 'verified',
@@ -129,12 +138,10 @@ export const VerificationProvider = ({ children }) => {
         badgesSource: source,
         isFetchingBadges: false,
       }));
-      
       const badgeCount = badges.length;
       const sourceNote = source === 'demo' 
         ? ' (Demo mode - in production, real badges will be fetched)' 
         : '';
-      
       console.log('[Context] Verification successful!');
       return { 
         success: true, 

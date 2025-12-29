@@ -48,7 +48,10 @@ const VerifyPage = () => {
       const result = await checkVerification(username);
       setVerifyMessage(result);
     } catch (error) {
-      setVerifyMessage({ success: false, message: 'An error occurred during verification.' });
+      setVerifyMessage({
+        success: false,
+        message: error?.message || (error && typeof error === 'object' && error.toString()) || 'An error occurred during verification.'
+      });
     } finally {
       setIsVerifying(false);
     }

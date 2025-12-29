@@ -1,46 +1,65 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { User, CheckCircle, Calendar, Award, ArrowLeft, ExternalLink, Copy, Check, Share2, Info } from 'lucide-react';
 import { useVerification } from '../context/VerificationContext';
+import { fetchPublicBadges } from '../services/badgeStore';
 import AnimatedBadge from '../components/AnimatedBadge';
 
 const ProfilePage = () => {
+
   const { username: urlUsername } = useParams();
   const { username: loggedInUsername, isVerified, verifiedAt, earnedBadges, badgesSource } = useVerification();
-  const [copiedUrl, setCopiedUrl] = React.useState(false);
-  
+  const [copiedUrl, setCopiedUrl] = useState(false);
+  const [publicProfile, setPublicProfile] = useState(null);
+  const [loadingPublic, setLoadingPublic] = useState(false);
+  const [publicError, setPublicError] = useState(null);
+
   // Check if this is the logged-in user's profile
   const isOwnProfile = loggedInUsername && urlUsername.toLowerCase() === loggedInUsername.toLowerCase();
-  
-  // Get user data - if it's own profile, use context data; otherwise use localStorage
-  const userData = useMemo(() => {
+
+  // Get user data - if it's own profile, use context data; otherwise fetch from backend
+  useEffect(() => {
     if (isOwnProfile) {
-      return {
+      setPublicProfile(null);
+      setPublicError(null);
+      setLoadingPublic(false);
+      return;
+    }
+    setLoadingPublic(true);
+    setPublicError(null);
+    fetchPublicBadges(urlUsername)
+      .then(badges => {
+        setPublicProfile({
+          username: urlUsername,
+          isVerified: badges && badges.length > 0,
+          verifiedAt: null, // Optionally fetch/store this in backend
+          badges: badges || [],
+          badgesSource: null, // Optionally fetch/store this in backend
+        });
+        setLoadingPublic(false);
+      })
+      .catch(err => {
+        setPublicError('Could not load public badges.');
+        setLoadingPublic(false);
+      });
+  }, [isOwnProfile, urlUsername]);
+
+  const userData = isOwnProfile
+    ? {
         username: loggedInUsername,
         isVerified: isVerified,
         verifiedAt: verifiedAt,
         badges: earnedBadges || [],
         badgesSource: badgesSource,
+      }
+    : publicProfile || {
+        username: urlUsername,
+        isVerified: false,
+        verifiedAt: null,
+        badges: [],
+        badgesSource: null,
       };
-    }
-    
-    // Try to find stored profile data for other users (in production, this would be an API call)
-    const storedProfiles = JSON.parse(localStorage.getItem('leetcode_profiles') || '{}');
-    const profileData = storedProfiles[urlUsername.toLowerCase()];
-    
-    if (profileData) {
-      return profileData;
-    }
-    
-    // Return empty profile if user not found
-    return {
-      username: urlUsername,
-      isVerified: false,
-      verifiedAt: null,
-      badges: [],
-    };
-  }, [isOwnProfile, loggedInUsername, isVerified, verifiedAt, earnedBadges, badgesSource, urlUsername]);
 
   // For scraped badges, they're already full objects, not just IDs
   const userBadges = userData.badges || [];
@@ -58,6 +77,12 @@ const ProfilePage = () => {
   return (
     <div className="min-h-screen py-8 sm:py-12 px-3 sm:px-4">
       <div className="max-w-6xl mx-auto">
+        {!isOwnProfile && loadingPublic && (
+          <div className="text-center text-gray-400 py-8">Loading public profile...</div>
+        )}
+        {!isOwnProfile && publicError && (
+          <div className="text-center text-red-400 py-8">{publicError}</div>
+        )}
         {/* Back Button */}
         <Link
           to="/"

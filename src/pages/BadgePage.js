@@ -1,8 +1,9 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Share2, Download, ArrowLeft, ExternalLink, Copy, Check, Award, Calendar, CheckCircle } from 'lucide-react';
 import { useVerification } from '../context/VerificationContext';
+import { fetchPublicBadges } from '../services/badgeStore';
 import AnimatedBadge from '../components/AnimatedBadge';
 
 const BadgePage = () => {
@@ -10,24 +11,18 @@ const BadgePage = () => {
   const [copied, setCopied] = React.useState(false);
   const { username: loggedInUsername, earnedBadges, verifiedAt, isVerified: userVerified } = useVerification();
   
-  // Find the badge from earned badges (either own or from stored profiles)
-  const badge = useMemo(() => {
-    // Check if viewing own badge
+
+  // New: fetch badge from public API if not own profile
+  const [badge, setBadge] = useState(null);
+  useEffect(() => {
     const isOwnProfile = loggedInUsername && username.toLowerCase() === loggedInUsername.toLowerCase();
-    
     if (isOwnProfile && earnedBadges) {
-      return earnedBadges.find(b => (b.id === badgeId || b.leetcodeId === badgeId));
+      setBadge(earnedBadges.find(b => (b.id === badgeId || b.leetcodeId === badgeId)));
+    } else {
+      fetchPublicBadges(username).then(badges => {
+        setBadge(badges.find(b => (b.id === badgeId || b.leetcodeId === badgeId)) || null);
+      });
     }
-    
-    // Try to find from stored profiles
-    const storedProfiles = JSON.parse(localStorage.getItem('leetcode_profiles') || '{}');
-    const profileData = storedProfiles[username.toLowerCase()];
-    
-    if (profileData?.badges) {
-      return profileData.badges.find(b => (b.id === badgeId || b.leetcodeId === badgeId));
-    }
-    
-    return null;
   }, [badgeId, username, loggedInUsername, earnedBadges]);
 
   // Get verification status
