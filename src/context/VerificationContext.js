@@ -117,17 +117,27 @@ export const VerificationProvider = ({ children }) => {
       const badges = badgesResult?.badges || [];
       const source = badgesResult?.source || 'unknown';
       console.log('[Context] Updating state with badges:', badges.length);
+      
       // Store encrypted badge data in DB
       try {
         const { storeBadges } = await import('../services/badgeStore');
-        await storeBadges(username, badges);
+        const stored = await storeBadges(username, badges);
+        if (!stored) {
+          throw new Error('Failed to store badges');
+        }
         console.log('[Context] Badges stored in DB');
       } catch (err) {
         console.error('[Context] Failed to store badges in DB:', err);
-        // Surface DB error to user if badge storage fails
+        // Surface DB error to user with helpful message
+        let errorMessage = err?.message || 'Failed to store badges in database.';
+        if (errorMessage.includes('MongoDB') || errorMessage.includes('timeout')) {
+          errorMessage += ' Make sure MongoDB is running locally.';
+        } else if (errorMessage.includes('server not reachable')) {
+          errorMessage += ' Make sure the backend server is running (npm run server).';
+        }
         return {
           success: false,
-          message: err?.message || 'Failed to store badges in database. Please try again.'
+          message: errorMessage
         };
       }
       setVerificationState(prev => ({

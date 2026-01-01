@@ -36,6 +36,9 @@ Thumbs.db
 *.log
 .cache
 
+# MongoDB data directory
+data/
+
 # Personal notes
 CONCEPT.md
 .vercel

@@ -6,6 +6,16 @@ const API_BASE = process.env.NODE_ENV === 'production'
   ? '' 
   : (process.env.REACT_APP_API_URL || 'http://localhost:3001');
 
+// Fetch with timeout
+const fetchWithTimeout = (url, options = {}, timeout = 15000) => {
+  return Promise.race([
+    fetch(url, options),
+    new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Request timeout')), timeout)
+    )
+  ]);
+};
+
 /**
  * Fetch user's ACTUAL badges from LeetCode via our backend proxy
  */
@@ -14,10 +24,10 @@ export const fetchLeetCodeBadges = async (username) => {
   
   try {
     console.log('[API] Calling backend server...');
-    const response = await fetch(`${API_BASE}/api/badges/${encodeURIComponent(username)}`, {
+    const response = await fetchWithTimeout(`${API_BASE}/api/badges/${encodeURIComponent(username)}`, {
       method: 'GET',
       headers: { 'Accept': 'application/json' },
-    });
+    }, 15000);
 
     if (response.ok) {
       const data = await response.json();
