@@ -42,14 +42,19 @@ const BadgePage = () => {
 
   // Get verification status
   const isOwnProfile = loggedInUsername && username.toLowerCase() === loggedInUsername.toLowerCase();
-  const isVerified = isOwnProfile ? userVerified : (() => {
+  
+  // Use useMemo to recalculate verification status when dependencies change
+  const isVerified = useMemo(() => {
+    if (isOwnProfile) return userVerified;
     const storedProfiles = JSON.parse(localStorage.getItem('leetcode_profiles') || '{}');
     return storedProfiles[username.toLowerCase()]?.isVerified || false;
-  })();
-  const verifiedDate = isOwnProfile ? verifiedAt : (() => {
+  }, [isOwnProfile, userVerified, username]);
+  
+  const verifiedDate = useMemo(() => {
+    if (isOwnProfile) return verifiedAt;
     const storedProfiles = JSON.parse(localStorage.getItem('leetcode_profiles') || '{}');
     return storedProfiles[username.toLowerCase()]?.verifiedAt;
-  })();
+  }, [isOwnProfile, verifiedAt, username]);
 
   if (!badge) {
     return (
