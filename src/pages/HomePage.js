@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Award, Shield, Share2, ExternalLink, CheckCircle, ArrowRight, Zap, Globe, Lock } from 'lucide-react';
+import { Award, Shield, ExternalLink, CheckCircle, ArrowRight, Zap, Globe, Lock } from 'lucide-react';
 
 const HomePage = () => {
   return (
@@ -15,7 +15,7 @@ const HomePage = () => {
             transition={{ duration: 0.6 }}
           >
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6 leading-tight">
-              Share Your{' '}
+              Verify Your{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-lc-orange to-yellow-500">
                 LeetCode Badges
               </span>
@@ -53,11 +53,11 @@ const HomePage = () => {
               How It Works
             </h2>
             <p className="text-gray-400 max-w-2xl mx-auto text-sm sm:text-base px-2">
-              Three simple steps to share your LeetCode achievements with the world
+              Two simple steps to verify and display your LeetCode achievements
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 md:gap-8 max-w-4xl mx-auto">
             {[
               {
                 icon: Lock,
@@ -68,14 +68,8 @@ const HomePage = () => {
               {
                 icon: Zap,
                 title: 'Auto-Fetch Badges',
-                description: 'We automatically scrape your earned badges directly from LeetCode.',
+                description: 'We automatically fetch your earned badges directly from LeetCode.',
                 step: '2',
-              },
-              {
-                icon: Globe,
-                title: 'Share Anywhere',
-                description: 'Get unique public URLs for each badge to embed in your portfolio.',
-                step: '3',
               },
             ].map((item, index) => (
               <motion.div
@@ -125,11 +119,6 @@ const HomePage = () => {
                 description: 'Only badges you actually earned on LeetCode are displayed. No fake achievements.',
               },
               {
-                icon: Share2,
-                title: 'Shareable URLs',
-                description: 'Each badge gets its own public URL that you can share anywhere.',
-              },
-              {
                 icon: CheckCircle,
                 title: 'Profile Verification',
                 description: 'Prove you own your LeetCode profile with our token-based verification.',
@@ -138,11 +127,6 @@ const HomePage = () => {
                 icon: Award,
                 title: 'All Badge Types',
                 description: 'Study plans, contests, daily challenges, annual badges - all supported.',
-              },
-              {
-                icon: ExternalLink,
-                title: 'Easy Embedding',
-                description: 'Add badge links to your portfolio, GitHub README, or LinkedIn.',
               },
               {
                 icon: Zap,
@@ -180,8 +164,7 @@ const HomePage = () => {
               Ready to Showcase Your Achievements?
             </h2>
             <p className="text-gray-400 mb-6 sm:mb-8 max-w-xl mx-auto text-sm sm:text-base">
-              Join developers who share their LeetCode progress with verified, 
-              beautiful badge pages.
+              Join developers who verify their LeetCode profiles and display their achievements.
             </p>
             <Link to="/verify">
               <motion.button

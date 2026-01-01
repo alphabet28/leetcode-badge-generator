@@ -1,7 +1,7 @@
 import React, { useMemo, useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { User, CheckCircle, Calendar, Award, ArrowLeft, ExternalLink, Copy, Check, Share2, Info } from 'lucide-react';
+import { User, CheckCircle, Calendar, Award, ArrowLeft, ExternalLink, Info } from 'lucide-react';
 import { useVerification } from '../context/VerificationContext';
 import { fetchPublicBadges } from '../services/badgeStore';
 import AnimatedBadge from '../components/AnimatedBadge';
@@ -10,7 +10,6 @@ const ProfilePage = () => {
 
   const { username: urlUsername } = useParams();
   const { username: loggedInUsername, isVerified, verifiedAt, earnedBadges, badgesSource } = useVerification();
-  const [copiedUrl, setCopiedUrl] = useState(false);
   const [publicProfile, setPublicProfile] = useState(null);
   const [loadingPublic, setLoadingPublic] = useState(false);
   const [publicError, setPublicError] = useState(null);
@@ -63,16 +62,6 @@ const ProfilePage = () => {
 
   // For scraped badges, they're already full objects, not just IDs
   const userBadges = userData.badges || [];
-
-  const handleCopyUrl = async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      setCopiedUrl(true);
-      setTimeout(() => setCopiedUrl(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy:', err);
-    }
-  };
 
   return (
     <div className="min-h-screen py-8 sm:py-12 px-3 sm:px-4">
@@ -133,15 +122,6 @@ const ProfilePage = () => {
 
             {/* Actions */}
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full md:w-auto">
-              <motion.button
-                onClick={handleCopyUrl}
-                className="btn-secondary flex items-center justify-center gap-2 text-sm py-2 px-4"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {copiedUrl ? <Check className="w-4 h-4 sm:w-5 sm:h-5 text-lc-green" /> : <Copy className="w-4 h-4 sm:w-5 sm:h-5" />}
-                {copiedUrl ? 'Copied!' : 'Share Profile'}
-              </motion.button>
               <a
                 href={`https://leetcode.com/${urlUsername}`}
                 target="_blank"
@@ -160,20 +140,6 @@ const ProfilePage = () => {
             </div>
           </div>
 
-          {/* Share URL Box */}
-          {userData.isVerified && (
-            <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-white/10">
-              <div className="flex items-center gap-2 text-gray-400 text-xs sm:text-sm mb-2">
-                <Share2 className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span>Public Profile URL</span>
-              </div>
-              <div className="flex gap-2">
-                <div className="flex-1 bg-lc-darker/80 border border-white/20 rounded-lg px-3 sm:px-4 py-2 text-lc-orange font-mono text-xs sm:text-sm overflow-x-auto break-all">
-                  {window.location.href}
-                </div>
-              </div>
-            </div>
-          )}
         </motion.div>
 
         {/* Own Profile Notice */}
@@ -186,8 +152,8 @@ const ProfilePage = () => {
           >
             <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
               <div className="flex-1 text-center sm:text-left">
-                <h3 className="font-semibold text-lc-orange text-sm sm:text-base">This is your public profile!</h3>
-                <p className="text-gray-400 text-xs sm:text-sm">Share this link with others to showcase your badges.</p>
+                <h3 className="font-semibold text-lc-orange text-sm sm:text-base">This is your profile!</h3>
+                <p className="text-gray-400 text-xs sm:text-sm">Manage and view your verified badges.</p>
               </div>
               <Link to="/verify">
                 <button className="btn-primary py-2 px-4 text-xs sm:text-sm">Manage Badges</button>

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   User, ArrowRight, ExternalLink, AlertTriangle, CheckCircle, 
-  RefreshCw, Award, Share2, Copy, Check, Eye, Info, Loader2 
+  RefreshCw, Award, Copy, Check, Eye, Info, Loader2 
 } from 'lucide-react';
 import { useVerification } from '../context/VerificationContext';
 import TokenDisplay from '../components/TokenDisplay';
@@ -14,7 +14,6 @@ const VerifyPage = () => {
   const [inputUsername, setInputUsername] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
   const [verifyMessage, setVerifyMessage] = useState(null);
-  const [copiedUrl, setCopiedUrl] = useState(false);
   const [copiedBadgeUrl, setCopiedBadgeUrl] = useState(null);
   
   const {
@@ -66,17 +65,6 @@ const VerifyPage = () => {
     resetVerification();
     setInputUsername('');
     setVerifyMessage(null);
-  };
-
-  const handleCopyProfileUrl = async () => {
-    const url = `${window.location.origin}/profile/${username}`;
-    try {
-      await navigator.clipboard.writeText(url);
-      setCopiedUrl(true);
-      setTimeout(() => setCopiedUrl(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy:', err);
-    }
   };
 
   const handleCopyBadgeUrl = async (badgeId) => {
@@ -143,35 +131,6 @@ const VerifyPage = () => {
                     <RefreshCw className="w-4 h-4" />
                   </button>
                 </div>
-              </div>
-            </motion.div>
-
-            {/* Share Profile URL */}
-            <motion.div
-              className="card mb-6 sm:mb-8"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-            >
-              <h3 className="text-base sm:text-lg font-semibold text-white mb-2 sm:mb-3 flex items-center gap-2">
-                <Share2 className="w-4 h-4 sm:w-5 sm:h-5 text-lc-orange" />
-                Your Public Profile URL
-              </h3>
-              <p className="text-gray-400 text-xs sm:text-sm mb-3">
-                Share this link to show all your badges at once
-              </p>
-              <div className="flex flex-col sm:flex-row gap-2">
-                <div className="flex-1 bg-lc-darker/80 border border-white/20 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-lc-orange font-mono text-xs sm:text-sm overflow-x-auto break-all">
-                  {window.location.origin}/profile/{username}
-                </div>
-                <motion.button
-                  onClick={handleCopyProfileUrl}
-                  className="btn-secondary px-4 py-2 flex items-center justify-center gap-2 w-full sm:w-auto"
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {copiedUrl ? <Check className="w-5 h-5 text-lc-green" /> : <Copy className="w-5 h-5" />}
-                  <span className="sm:hidden">{copiedUrl ? 'Copied!' : 'Copy URL'}</span>
-                </motion.button>
               </div>
             </motion.div>
 

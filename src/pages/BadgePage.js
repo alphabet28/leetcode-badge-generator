@@ -1,19 +1,34 @@
 import React, { useMemo, useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Share2, Download, ArrowLeft, ExternalLink, Copy, Check, Award, Calendar, CheckCircle } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Copy, Check, Award, Calendar, CheckCircle } from 'lucide-react';
 import { useVerification } from '../context/VerificationContext';
 import { fetchPublicBadges } from '../services/badgeStore';
 import AnimatedBadge from '../components/AnimatedBadge';
 
 const BadgePage = () => {
   const { username, badgeId } = useParams();
-  const [copied, setCopied] = React.useState(false);
   const { username: loggedInUsername, earnedBadges, verifiedAt, isVerified: userVerified } = useVerification();
   
 
   // New: fetch badge from public API if not own profile
   const [badge, setBadge] = useState(null);
+  const [copied, setCopied] = useState(false);
+  
+  // Share URL for this badge
+  const shareUrl = window.location.href;
+  
+  // Copy link handler
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
+  };
+  
   useEffect(() => {
     const isOwnProfile = loggedInUsername && username.toLowerCase() === loggedInUsername.toLowerCase();
     if (isOwnProfile && earnedBadges) {
@@ -52,34 +67,6 @@ const BadgePage = () => {
       </div>
     );
   }
-
-  const shareUrl = `${window.location.origin}/badge/${username}/${badgeId}`;
-
-  const handleCopyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(shareUrl);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy:', err);
-    }
-  };
-
-  const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: `${badge.name} - LeetCode Badge`,
-          text: `Check out my ${badge.name} badge on LeetCode! @${username}`,
-          url: shareUrl,
-        });
-      } catch (err) {
-        console.log('Share cancelled');
-      }
-    } else {
-      handleCopyLink();
-    }
-  };
 
   return (
     <div className="min-h-screen py-8 sm:py-12 px-3 sm:px-4">
@@ -134,69 +121,14 @@ const BadgePage = () => {
           )}
         </motion.div>
 
-        {/* Actions */}
-        <motion.div
-          className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mt-6 sm:mt-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          {/* Share Button */}
-          <motion.button
-            onClick={handleShare}
-            className="card flex items-center justify-center gap-2 sm:gap-3 py-3 sm:py-4 hover:border-lc-orange/50 cursor-pointer"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <Share2 className="w-5 h-5 sm:w-6 sm:h-6 text-lc-orange" />
-            <span className="font-semibold text-white text-sm sm:text-base">Share Badge</span>
-          </motion.button>
-
-          {/* Copy Link */}
-          <motion.button
-            onClick={handleCopyLink}
-            className="card flex items-center justify-center gap-2 sm:gap-3 py-3 sm:py-4 hover:border-lc-orange/50 cursor-pointer"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            {copied ? (
-              <>
-                <Check className="w-5 h-5 sm:w-6 sm:h-6 text-lc-green" />
-                <span className="font-semibold text-lc-green text-sm sm:text-base">Copied!</span>
-              </>
-            ) : (
-              <>
-                <Copy className="w-5 h-5 sm:w-6 sm:h-6 text-lc-blue" />
-                <span className="font-semibold text-white text-sm sm:text-base">Copy Link</span>
-              </>
-            )}
-          </motion.button>
-
-          {/* View on LeetCode */}
-          <a
-            href={`https://leetcode.com/${username}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <motion.div
-              className="card flex items-center justify-center gap-2 sm:gap-3 py-3 sm:py-4 hover:border-lc-orange/50 cursor-pointer h-full"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <ExternalLink className="w-5 h-5 sm:w-6 sm:h-6 text-lc-purple" />
-              <span className="font-semibold text-white text-sm sm:text-base">View on LeetCode</span>
-            </motion.div>
-          </a>
-        </motion.div>
-
-        {/* Share URL */}
+        {/* Share Badge URL */}
         <motion.div
           className="card mt-6 sm:mt-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.2 }}
         >
-          <h3 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4">Public Badge URL</h3>
+          <h3 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4">Share This Badge</h3>
           <p className="text-gray-400 text-xs sm:text-sm mb-3 sm:mb-4">
             Share this unique URL to showcase this badge:
           </p>
@@ -210,10 +142,35 @@ const BadgePage = () => {
               className="btn-secondary px-4 py-2 flex items-center justify-center gap-2 w-full sm:w-auto"
               whileTap={{ scale: 0.95 }}
             >
-              {copied ? <Check className="w-5 h-5 text-lc-green" /> : <Copy className="w-5 h-5" />}
-              <span className="sm:hidden">{copied ? 'Copied!' : 'Copy URL'}</span>
+              {copied ? <Check className="w-4 h-4 sm:w-5 sm:h-5 text-lc-green" /> : <Copy className="w-4 h-4 sm:w-5 sm:h-5" />}
+              <span className="text-sm">{copied ? 'Copied!' : 'Copy Link'}</span>
             </motion.button>
           </div>
+        </motion.div>
+
+        {/* Actions */}
+        <motion.div
+          className="mt-6 sm:mt-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          {/* View on LeetCode */}
+          <a
+            href={`https://leetcode.com/${username}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block"
+          >
+            <motion.div
+              className="card flex items-center justify-center gap-2 sm:gap-3 py-3 sm:py-4 hover:border-lc-orange/50 cursor-pointer"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <ExternalLink className="w-5 h-5 sm:w-6 sm:h-6 text-lc-purple" />
+              <span className="font-semibold text-white text-sm sm:text-base">View on LeetCode</span>
+            </motion.div>
+          </a>
         </motion.div>
 
         {/* Badge Details */}
