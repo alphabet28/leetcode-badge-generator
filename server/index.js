@@ -10,6 +10,22 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
+// Root endpoint - API info
+app.get('/', (req, res) => {
+  res.json({
+    name: 'LeetCode Badge Generator API',
+    version: '1.0.0',
+    status: 'running',
+    endpoints: {
+      health: '/api/health',
+      storeBadges: 'POST /api/badges/store',
+      publicBadges: 'GET /api/badges/public?username=<username>',
+      leetcodeBadges: 'GET /api/badges/:username'
+    },
+    documentation: 'https://github.com/yourusername/leetcode-badge-generator'
+  });
+});
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
