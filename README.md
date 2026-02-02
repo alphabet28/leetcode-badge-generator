@@ -12,7 +12,7 @@ An independent tool for creating beautiful, shareable badges from your LeetCode 
 
 **This service is NOT affiliated with, endorsed by, or sponsored by LeetCode Inc.**
 
-All badge designs are original creations. We do not use official LeetCode logos or trademarks.
+This project uses the original LeetCode badge GIFs solely for the purpose of enabling users to showcase their achievements. All other badge designs and site features are original creations. No official LeetCode logos or trademarks are used beyond the publicly available badge images.
 
 ---
 
