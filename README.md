@@ -18,34 +18,11 @@ All badge designs are original creations. We do not use official LeetCode logos 
 
 ## 🚀 Features
 
-- ✅ **Ownership Verification** - Prove you own your LeetCode profile via bio challenge
-- 🎨 **Beautiful Animated Badges** - Stunning designs with Framer Motion animations
-- 🔗 **Easy Sharing** - Share on LinkedIn, GitHub, or embed anywhere
-- 🛡️ **Trust Levels** - Self-declared vs Ownership Verified badges
-- 📱 **Responsive Design** - Works on all devices
-
-## 🏅 Supported Badges
-
-### Annual Medals
-- 50 Days Badge (2023-2025)
-- 100 Days Badge (2023-2025)
-- 200 Days Badge (2024)
-- Annual Badge / 300 Days (2021-2024)
-
-### Competition Medals
-- Guardian (Top 5%)
-- Knight (Top 25%)
-
-### Study Plan Medals
-- LeetCode 75
-- Top Interview 150
-- SQL 50
-- Dynamic Programming
-- And many more...
-
-### Submission Days
-- 100, 200, 365, 500, 1000, 2000 Days Badges
-
+- **Ownership Verification** - Prove you own your LeetCode profile via bio challenge
+- **Beautiful Animated Badges** - Stunning designs with Framer Motion animations
+- **Easy Sharing** - Share on LinkedIn, GitHub, or embed anywhere
+- **Trust Levels** - Self-declared vs Ownership Verified badges
+- **Responsive Design** - Works on all devices
 ---
 
 ## 🛠️ Installation
